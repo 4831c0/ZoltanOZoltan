@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import c03148.zoltan.ui.component.ARComponent
 import c03148.zoltan.ui.theme.ZoltánoZoltánTheme
 import com.google.android.filament.Engine
 import com.google.ar.core.Anchor
@@ -52,168 +53,20 @@ import io.github.sceneview.rememberNodes
 import io.github.sceneview.rememberOnGestureListener
 import io.github.sceneview.rememberView
 
-private const val kModelFile = "models/zoltan.glb"
-private const val kMaxModelInstances = 10
-
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        fun createAnchorNode(
-            engine: Engine,
-            modelLoader: ModelLoader,
-            materialLoader: MaterialLoader,
-            modelInstances: MutableList<ModelInstance>,
-            anchor: Anchor
-        ): AnchorNode {
-            val anchorNode = AnchorNode(engine = engine, anchor = anchor)
-            val modelNode = ModelNode(
-                modelInstance = modelInstances.apply {
-                    if (isEmpty()) {
-                        this += modelLoader.createInstancedModel(kModelFile, kMaxModelInstances)
-                    }
-                }.removeLast(),
-                // Scale to fit in a 0.5 meters cube
-                scaleToUnits = 0.5f
-            ).apply {
-                // Model Node needs to be editable for independent rotation from the anchor rotation
-                isEditable = true
-            }
-            val boundingBoxNode = CubeNode(
-                engine,
-                size = modelNode.extents,
-                center = modelNode.center,
-                materialInstance = materialLoader.createColorInstance(Color.White.copy(alpha = 0.5f))
-            ).apply {
-                isVisible = false
-            }
-            modelNode.addChildNode(boundingBoxNode)
-            anchorNode.addChildNode(modelNode)
-
-            listOf(modelNode, anchorNode).forEach {
-                it.onEditingChanged = { editingTransforms ->
-                    boundingBoxNode.isVisible = editingTransforms.isNotEmpty()
-                }
-            }
-            return anchorNode
-        }
-
         setContent {
             ZoltánoZoltánTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
-                    // A surface container using the 'background' color from the theme
-                    Box(
-                        modifier = Modifier.fillMaxSize().padding(innerPadding),
-                    ) {
-                        // The destroy calls are automatically made when their disposable effect leaves
-                        // the composition or its key changes.
-                        val engine = rememberEngine()
-                        val modelLoader = rememberModelLoader(engine)
-                        val materialLoader = rememberMaterialLoader(engine)
-                        val cameraNode = rememberARCameraNode(engine)
-                        val childNodes = rememberNodes()
-                        val view = rememberView(engine)
-                        val collisionSystem = rememberCollisionSystem(view)
-
-                        var planeRenderer by remember { mutableStateOf(true) }
-
-                        val modelInstances = remember { mutableListOf<ModelInstance>() }
-                        var trackingFailureReason by remember {
-                            mutableStateOf<TrackingFailureReason?>(null)
-                        }
-                        var frame by remember { mutableStateOf<Frame?>(null) }
-                        ARScene(
-                            modifier = Modifier.fillMaxSize(),
-                            childNodes = childNodes,
-                            engine = engine,
-                            view = view,
-                            modelLoader = modelLoader,
-                            collisionSystem = collisionSystem,
-                            sessionConfiguration = { session, config ->
-                                config.depthMode =
-                                    when (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
-                                        true -> Config.DepthMode.AUTOMATIC
-                                        else -> Config.DepthMode.DISABLED
-                                    }
-                                config.instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
-                                config.lightEstimationMode =
-                                    Config.LightEstimationMode.ENVIRONMENTAL_HDR
-                            },
-                            cameraNode = cameraNode,
-                            planeRenderer = planeRenderer,
-                            onTrackingFailureChanged = {
-                                trackingFailureReason = it
-                            },
-                            onSessionUpdated = { session, updatedFrame ->
-                                frame = updatedFrame
-
-                                if (childNodes.isEmpty()) {
-                                    updatedFrame.getUpdatedPlanes()
-                                        .firstOrNull { it.type == Plane.Type.HORIZONTAL_UPWARD_FACING }
-                                        ?.let { it.createAnchorOrNull(it.centerPose) }?.let { anchor ->
-                                            childNodes += createAnchorNode(
-                                                engine = engine,
-                                                modelLoader = modelLoader,
-                                                materialLoader = materialLoader,
-                                                modelInstances = modelInstances,
-                                                anchor = anchor
-                                            )
-                                        }
-                                }
-                            },
-                            onGestureListener = rememberOnGestureListener(
-                                onSingleTapConfirmed = { motionEvent, node ->
-                                    if (node == null) {
-                                        val hitResults = frame?.hitTest(motionEvent.x, motionEvent.y)
-                                        hitResults?.firstOrNull {
-                                            it.isValid(
-                                                depthPoint = false,
-                                                point = false
-                                            )
-                                        }?.createAnchorOrNull()
-                                            ?.let { anchor ->
-                                                planeRenderer = false
-                                                childNodes += createAnchorNode(
-                                                    engine = engine,
-                                                    modelLoader = modelLoader,
-                                                    materialLoader = materialLoader,
-                                                    modelInstances = modelInstances,
-                                                    anchor = anchor
-                                                )
-                                            }
-                                    }
-                                })
-                        )
-                        Text(
-                            modifier = Modifier
-                                .systemBarsPadding()
-                                .fillMaxWidth()
-                                .align(Alignment.TopCenter)
-                                .padding(top = 16.dp, start = 32.dp, end = 32.dp),
-                            textAlign = TextAlign.Center,
-                            fontSize = 28.sp,
-                            color = Color.White,
-                            text = trackingFailureReason?.getDescription(LocalContext.current) ?: if (childNodes.isEmpty()) {
-                                stringResource(R.string.point_your_phone_down)
-                            } else {
-                                stringResource(R.string.tap_anywhere_to_add_model)
-                            }
-                        )
-                    }
+                    ARComponent(Modifier.fillMaxSize().padding(innerPadding))
 
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
