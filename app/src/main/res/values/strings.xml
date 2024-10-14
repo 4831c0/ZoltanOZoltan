@@ -2,4 +2,7 @@
     <string name="app_name">Zoltán-o-Zoltán</string>
     <string name="point_your_phone_down">Point your phone down</string>
     <string name="tap_anywhere_to_add_model">Tap anywhere to add model</string>
+    <string name="main_title">Main</string>
+    <string name="zoltan_title">Zoltán-o-Zoltán</string>
+    <string name="settings_title">Settings</string>
 </resources>
