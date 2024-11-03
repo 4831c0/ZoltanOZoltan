@@ -15,14 +15,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import c03148.zoltan.R
-import c03148.zoltan.data.User
-import c03148.zoltan.data.Zoltan
+import c03148.zoltan.data.stubUser
+import c03148.zoltan.ui.component.PadLeft
 import c03148.zoltan.ui.component.subcomps.ProfileComponent
 import c03148.zoltan.ui.component.subcomps.ZoltanList
-
-private val stubUser = User("Zoltánozó Zoltán", arrayListOf(
-    Zoltan("aba", "aba")
-), 1)
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier, stub: Boolean = false) {
@@ -34,10 +30,14 @@ fun MainScreen(modifier: Modifier = Modifier, stub: Boolean = false) {
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold
             )
-            Spacer(Modifier.size(26.dp))
-            ProfileComponent(modifier, stub, stubUser)
-            Spacer(Modifier.size(10.dp))
-            ZoltanList(modifier, stubUser)
+            PadLeft(Modifier.size(8.dp)) {
+                Column {
+                    Spacer(Modifier.size(26.dp))
+                    ProfileComponent(modifier, stub, stubUser)
+                    Spacer(Modifier.size(16.dp))
+                    ZoltanList(stubUser, stub, modifier)
+                }
+            }
         }
     }
 }
