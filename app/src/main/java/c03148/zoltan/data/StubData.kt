@@ -8,4 +8,11 @@ val stubZoltanList = arrayListOf(
     Zoltan("Tescozoltán", "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.canor.hu%2Fuploads%2Fkepek%2F1998_tesco%2Ftesco-dunaujvaros-500-01.jpg&f=1&nofb=1&ipt=f18779108a2721f0534d8c5aca997866358fc7db358a2dac7136ce18068e8315&ipo=images"),
     Zoltan("Kukázoltán", "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd1mkxvwtzddm9n.cloudfront.net%2Froot%2Fproduction%2Freport%2F48%2F48931%2F223864-5d2c46f5db8a1.jpg%3F1632691250&f=1&nofb=1&ipt=e2bbc23ac18533b30bbef0823ec925917cd3a97fd7222fe2bb813d62dd031edb&ipo=images")
 )
-val stubUser = User("Zoltánozó Zoltán", stubZoltanList, 1)
+val stubFriends = arrayListOf<User>(
+    User(1, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 1),
+    User(2, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 2),
+    User(3, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 3),
+    User(4, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 4),
+    User(5, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 5),
+)
+val stubUser = User(0, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, stubFriends, 1)
