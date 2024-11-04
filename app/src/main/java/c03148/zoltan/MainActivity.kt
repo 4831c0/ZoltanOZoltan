@@ -24,7 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import c03148.zoltan.settings.Settings
 import c03148.zoltan.ui.component.AppBarContainer
 import c03148.zoltan.ui.component.NavigationComp
-import c03148.zoltan.ui.theme.ZoltánoZoltánTheme
+import c03148.zoltan.ui.theme.ZoltanTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,7 +38,7 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
-            ZoltánoZoltánTheme {
+            ZoltanTheme {
                 val navController = rememberNavController()
                 val isScrolling = remember { mutableStateOf(false) }
                 val bottomBarState = rememberSaveable { mutableStateOf(true) }

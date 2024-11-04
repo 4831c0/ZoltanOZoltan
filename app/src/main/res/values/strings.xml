@@ -10,4 +10,11 @@
     <string name="level">Level %s</string>
     <string name="zoltans">My Zoltáns</string>
     <string name="friends">Friends</string>
+    <string name="force_theme">Force Theme</string>
+    <string name="force_theme_desc">Force a different theme color</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="light_theme">Light Theme</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="current_theme">Current theme is set to %s</string>
 </resources>
