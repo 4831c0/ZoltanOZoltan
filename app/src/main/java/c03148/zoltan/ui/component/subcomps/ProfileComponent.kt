@@ -16,7 +16,7 @@ import c03148.zoltan.data.User
 import c03148.zoltan.data.stubUser
 
 @Composable
-fun ProfileComponent(modifier: Modifier = Modifier, stub: Boolean, stubUser: User) {
+fun ProfileComponent(modifier: Modifier = Modifier, stub: Boolean, user: User) {
     Column {
         Text(
             text = stringResource(R.string.my_profile),
@@ -24,7 +24,7 @@ fun ProfileComponent(modifier: Modifier = Modifier, stub: Boolean, stubUser: Use
             fontSize = 24.sp
         )
         Spacer(Modifier.size(14.dp))
-        ImageURL("https://thispersondoesnotexist.com", stub, Modifier.size(370.dp))
+        ImageURL(user.picture, stub, Modifier.size(370.dp))
 
         Text(
             text = stubUser.username,

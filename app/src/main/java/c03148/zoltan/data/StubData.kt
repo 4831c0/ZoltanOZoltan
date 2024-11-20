@@ -1,5 +1,7 @@
 package c03148.zoltan.data
 
+import c03148.zoltan.samplePfp
+
 val stubZoltan = Zoltan("Spározoltóán", "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.1oxwSGDU-PXNDKiLFbIZRwHaD8%26pid%3DApi&f=1&ipt=a34743e8b4d91bbe45dcf0eab7a68561fa183d889dab4e0e0778bd89cf71f488&ipo=images")
 val stubZoltanList = arrayListOf(
     stubZoltan,
@@ -13,10 +15,10 @@ val stubZoltanList = arrayListOf(
     Zoltan("Túrázoltán", "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.wagrati.eu%2Fmedia%2Fimages%2Ftrekking-alpen-livigno-2000x1366.jpg&f=1&nofb=1&ipt=f55922c54b014b08fc34e921799dfb9e55bcbbd9bca483bc23b95add8f984a4b&ipo=images")
 )
 val stubFriends = arrayListOf<User>(
-    User(1, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 1),
-    User(2, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 2),
-    User(3, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 3),
-    User(4, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 4),
-    User(5, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 5),
+    User(1, samplePfp, "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 1),
+    User(2, samplePfp, "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 2),
+    User(3, samplePfp, "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 3),
+    User(4, samplePfp, "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 4),
+    User(5, samplePfp, "Zoltánozó Zoltán", stubZoltanList, mutableListOf(), 5),
 )
-val stubUser = User(0, "https://thispersondoesnotexist.com", "Zoltánozó Zoltán", stubZoltanList, stubFriends, 1)
+val stubUser = User(0, samplePfp, "Zoltánozó Zoltán", stubZoltanList, stubFriends, 1)
