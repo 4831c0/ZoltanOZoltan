@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +26,7 @@ import c03148.zoltan.settings.Settings
 import c03148.zoltan.ui.component.AppBarContainer
 import c03148.zoltan.ui.component.NavigationComp
 import c03148.zoltan.ui.theme.ZoltanTheme
+import c03148.zoltan.util.LocationHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,10 +34,12 @@ class MainActivity : FragmentActivity() {
 
     companion object {
         val client = Client()
+        lateinit var locationHelper: LocationHelper
     }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        locationHelper = LocationHelper(this)
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         enableEdgeToEdge()

@@ -27,6 +27,7 @@ import c03148.zoltan.ui.screen.impl.GameScreen
 import c03148.zoltan.ui.screen.impl.MainScreen
 import c03148.zoltan.ui.screen.impl.SettingsScreen
 import android.Manifest
+import c03148.zoltan.MainActivity.Companion.locationHelper
 import c03148.zoltan.ui.screen.impl.SetupScreen
 
 @Composable
@@ -52,6 +53,7 @@ fun NavigationComp(
     var lastStartScreen by rememberLastScreen()
     val startDest = remember(permissionState, lastStartScreen) {
         if (permissionState) {
+            locationHelper.init()
             lastStartScreen
         } else Screen.SetupScreen()
     }
@@ -85,6 +87,7 @@ fun NavigationComp(
             navPipe.toggleNavbar(false)
             SetupScreen(Modifier.fillMaxSize().padding(paddingValues)) {
                 navPipe.navigate(Screen.MainScreen())
+                locationHelper.init()
             }
         }
         composable(
