@@ -71,6 +71,9 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.material3.window.size)
 
+    // Accompanists
+    implementation(libs.accompanist.permissions)
+
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.svg)

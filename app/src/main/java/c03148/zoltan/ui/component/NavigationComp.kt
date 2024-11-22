@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,11 +20,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import c03148.zoltan.permissionGranted
 import c03148.zoltan.settings.Settings.Misc.rememberLastScreen
 import c03148.zoltan.ui.screen.Screen
 import c03148.zoltan.ui.screen.impl.GameScreen
 import c03148.zoltan.ui.screen.impl.MainScreen
 import c03148.zoltan.ui.screen.impl.SettingsScreen
+import android.Manifest
+import c03148.zoltan.ui.screen.impl.SetupScreen
 
 @Composable
 fun NavigationComp(
@@ -41,8 +45,16 @@ fun NavigationComp(
         .initWithNav(navController, bottomBarState)
         .collectAsStateWithLifecycle(LocalLifecycleOwner.current)
 
+    val context = LocalContext.current
+    var permissionState by remember { mutableStateOf(context.permissionGranted(
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )) }
     var lastStartScreen by rememberLastScreen()
-    val startDest = remember { lastStartScreen }
+    val startDest = remember(permissionState, lastStartScreen) {
+        if (permissionState) {
+            lastStartScreen
+        } else Screen.SetupScreen()
+    }
     val currentDest = remember(navController.currentDestination) {
         navController.currentDestination?.route ?: lastStartScreen
     }
@@ -67,6 +79,14 @@ fun NavigationComp(
         navController = navController,
         startDestination = startDest
     ) {
+        composable(
+            route = Screen.SetupScreen(),
+        ) {
+            navPipe.toggleNavbar(false)
+            SetupScreen(Modifier.fillMaxSize().padding(paddingValues)) {
+                navPipe.navigate(Screen.MainScreen())
+            }
+        }
         composable(
             route = Screen.MainScreen()
         ) {
