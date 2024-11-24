@@ -7,11 +7,15 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.String
+import kotlin.collections.Map
 
 class Client {
 
     private val client = OkHttpClient()
     val initialized = AtomicBoolean(false)
+    var zoltanRegistry = AtomicReference<Map<String, Zoltan>>(null)
 
     init {
         Thread {
@@ -22,6 +26,7 @@ class Client {
             val resp = client.newCall(req).execute()
             val zoltansObj = JSONObject(resp.body!!.string())
 
+            val zoltanMap = mutableMapOf<String, Zoltan>()
             for (name in zoltansObj.keys()) {
                 val zoltanObj = zoltansObj.getJSONObject(name)
                 val locationsArr = zoltanObj.getJSONArray("locations")
@@ -35,8 +40,9 @@ class Client {
                     )
                 }
 
-                Zoltan(name, zoltanObj.getString("url"), locations)
+                zoltanMap[name] = Zoltan(name, zoltanObj.getString("url"), locations)
             }
+            zoltanRegistry.set(zoltanMap)
 
             initialized.set(true)
         }.start()
