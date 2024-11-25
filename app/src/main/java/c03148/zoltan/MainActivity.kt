@@ -50,17 +50,18 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
-            ZoltanTheme {
+            val forcedTheme by Settings.Misc.rememberForceTheme()
+            val localDarkTheme by Settings.Misc.rememberIsDarkMode()
+            val systemDarkTheme = isSystemInDarkTheme()
+            val darkTheme = remember(forcedTheme, localDarkTheme, systemDarkTheme) {
+                if (forcedTheme) localDarkTheme else systemDarkTheme
+            }
+
+            ZoltanTheme(darkTheme) {
                 val navController = rememberNavController()
                 val isScrolling = remember { mutableStateOf(false) }
                 val bottomBarState = rememberSaveable { mutableStateOf(true) }
                 val systemBarFollowThemeState = rememberSaveable { mutableStateOf(true) }
-                val forcedTheme by Settings.Misc.rememberForceTheme()
-                val localDarkTheme by Settings.Misc.rememberIsDarkMode()
-                val systemDarkTheme = isSystemInDarkTheme()
-                val darkTheme = remember(forcedTheme, localDarkTheme, systemDarkTheme) {
-                    if (forcedTheme) localDarkTheme else systemDarkTheme
-                }
 
                 DisposableEffect(darkTheme, systemBarFollowThemeState.value) {
                     enableEdgeToEdge(
