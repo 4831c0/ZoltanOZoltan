@@ -29,7 +29,6 @@ import com.google.ar.core.TrackingFailureReason
 import io.github.sceneview.ar.ARScene
 import io.github.sceneview.ar.arcore.createAnchorOrNull
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
-import io.github.sceneview.ar.arcore.isValid
 import io.github.sceneview.ar.getDescription
 import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.ar.rememberARCameraNode
@@ -104,7 +103,7 @@ fun ARComponent(modifier: Modifier = Modifier) {
         val view = rememberView(engine)
         val collisionSystem = rememberCollisionSystem(view)
 
-        var planeRenderer by remember { mutableStateOf(true) }
+        var planeRenderer by remember { mutableStateOf(false) }
 
         val modelInstances = remember { mutableListOf<ModelInstance>() }
         var trackingFailureReason by remember {
@@ -152,25 +151,7 @@ fun ARComponent(modifier: Modifier = Modifier) {
             },
             onGestureListener = rememberOnGestureListener(
                 onSingleTapConfirmed = { motionEvent, node ->
-                    if (node == null) {
-                        val hitResults = frame?.hitTest(motionEvent.x, motionEvent.y)
-                        hitResults?.firstOrNull {
-                            it.isValid(
-                                depthPoint = false,
-                                point = false
-                            )
-                        }?.createAnchorOrNull()
-                            ?.let { anchor ->
-                                planeRenderer = false
-                                childNodes += createAnchorNode(
-                                    engine = engine,
-                                    modelLoader = modelLoader,
-                                    materialLoader = materialLoader,
-                                    modelInstances = modelInstances,
-                                    anchor = anchor
-                                )
-                            }
-                    }
+
                 })
         )
         Text(
@@ -184,9 +165,7 @@ fun ARComponent(modifier: Modifier = Modifier) {
             color = Color.White,
             text = trackingFailureReason?.getDescription(LocalContext.current) ?: if (childNodes.isEmpty()) {
                 stringResource(R.string.point_your_phone_down)
-            } else {
-                stringResource(R.string.tap_anywhere_to_add_model)
-            }
+            } else { stringResource(R.string.zoltan_found) }
         )
     }
 }

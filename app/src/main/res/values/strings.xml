@@ -17,4 +17,5 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="current_theme">Current theme is set to %s</string>
+    <string name="zoltan_found">Zoltán found!</string>
 </resources>
